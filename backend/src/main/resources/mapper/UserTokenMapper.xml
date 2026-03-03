@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.basic.backend.mapper.UserTokenMapper">
+
+    <resultMap id="UserTokenMap" type="com.basic.backend.entity.UserToken">
+        <id property="userId" column="user_id"/>
+        <result property="token" column="token"/>
+        <result property="expireAt" column="expire_at"/>
+    </resultMap>
+
+    <select id="selectByUserId" resultMap="UserTokenMap">
+        SELECT user_id, token, expire_at
+        FROM user_tokens
+        WHERE user_id = #{userId}
+            LIMIT 1
+    </select>
+
+    <insert id="upsert">
+        INSERT INTO user_tokens (user_id, token, expire_at)
+        VALUES (#{userId}, #{token}, #{expireAt})
+            ON DUPLICATE KEY UPDATE
+                                 token = VALUES(token),
+                                 expire_at = VALUES(expire_at)
+    </insert>
+
+    <delete id="deleteByUserId">
+        DELETE FROM user_tokens WHERE user_id = #{userId}
+    </delete>
+
+</mapper>

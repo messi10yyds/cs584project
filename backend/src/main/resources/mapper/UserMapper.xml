@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.basic.backend.mapper.UserMapper">
+
+    <resultMap id="UserMap" type="com.basic.backend.entity.User">
+        <id property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="passwordHash" column="password_hash"/>
+    </resultMap>
+
+    <select id="selectByUsername" resultMap="UserMap">
+        SELECT id, username, password_hash
+        FROM users
+        WHERE username = #{username}
+            LIMIT 1
+    </select>
+
+</mapper>
