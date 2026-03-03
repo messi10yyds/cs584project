@@ -2,6 +2,7 @@ package com.basic.backend.controller;
 
 import com.basic.backend.common.Result;
 import com.basic.backend.dto.LoginRequest;
+import com.basic.backend.dto.RegisterRequest;
 import com.basic.backend.exception.BizException;
 import com.basic.backend.service.AuthService;
 import jakarta.validation.Valid;
@@ -26,5 +27,10 @@ public class AuthController {
                         req.getPassword()
                 )
         );
+    }
+
+    @PostMapping("/register")
+    public Result<?> register(@Valid @RequestBody RegisterRequest req) {
+        return Result.ok(authService.register(req.getUsername(), req.getPassword()));
     }
 }

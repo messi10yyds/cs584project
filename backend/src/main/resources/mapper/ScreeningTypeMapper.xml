@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.basic.backend.mapper.ScreeningTypeMapper">
+
+    <select id="selectIntervalDaysById" resultType="int">
+        SELECT recommended_interval_days
+        FROM screening_types
+        WHERE id = #{id} AND is_active = true
+    </select>
+
+</mapper>

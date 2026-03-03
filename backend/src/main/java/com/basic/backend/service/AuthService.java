@@ -41,4 +41,28 @@ public class AuthService {
 
         return new LoginResponse(user.getId(), token, "Bearer");
     }
+
+    public LoginResponse register(String username, String password) {
+
+        // 1) username 查重
+        User existing = userMapper.selectByUsername(username);
+        if (existing != null) {
+            throw new BizException("Username already exists");
+        }
+
+        // 2) 写入 users
+        User user = new User();
+        user.setUsername(username);
+        user.setPasswordHash(PasswordUtil.hash(password)); // BCrypt
+        userMapper.insert(user); // 自增主键回填到 user.id
+
+        // 3) 签发 JWT（subject = userId）
+        String token = jwtTokenUtil.generateToken(String.valueOf(user.getId()));
+
+        // 4) 写入/覆盖 token（与 login 完全一致）
+        LocalDateTime expireAt = LocalDateTime.now().plusNanos(expireMs * 1_000_000L);
+        userTokenMapper.upsert(user.getId(), token, expireAt);
+
+        return new LoginResponse(user.getId(), token, "Bearer");
+    }
 }

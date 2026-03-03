@@ -16,10 +16,5 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div style="padding: 40px; font-family: Arial;">
-    <h1>Vue + Spring Boot Demo</h1>
-
-    <p v-if="error" style="color: red;">{{ error }}</p>
-    <p v-else>{{ message }}</p>
-  </div>
+  <router-view />
 </template>

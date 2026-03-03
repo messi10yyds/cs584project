@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.basic.backend.mapper.HealthProfileMapper">
+
+    <select id="selectByUserId" resultType="com.basic.backend.entity.HealthProfile">
+        SELECT id, user_id AS userId,
+               age, gender,
+               diabetes_type AS diabetesType,
+               diagnosis_timeframe AS diagnosisTimeframe,
+               created_at AS createdAt
+        FROM health_profiles
+        WHERE user_id = #{userId}
+            LIMIT 1
+    </select>
+
+    <insert id="insert" parameterType="com.basic.backend.entity.HealthProfile"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO health_profiles
+            (user_id, age, gender, diabetes_type, diagnosis_timeframe, created_at)
+        VALUES
+            (#{userId}, #{age}, #{gender}, #{diabetesType}, #{diagnosisTimeframe}, NOW())
+    </insert>
+
+</mapper>
