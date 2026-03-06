@@ -31,6 +31,8 @@ public class InitRegistrationRequestDTO {
 
     @Data
     public static class HealthProfileDTO {
+        private String name;
+        private String mrnNumber;
         private Integer age;
         private String gender;
         private String diabetesType;

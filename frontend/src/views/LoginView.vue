@@ -3,7 +3,7 @@
     <div class="auth-card">
 
       <div class="auth-brand">
-        <div class="auth-logoDot"></div>
+        <div class="auth-dot"></div>
         <div>
           <h1>Diacare Egypt</h1>
           <p class="auth-sub">Diabetes self-care support</p>

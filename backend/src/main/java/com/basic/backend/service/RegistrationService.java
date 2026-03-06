@@ -36,6 +36,8 @@ public class RegistrationService {
         if (healthProfileMapper.selectByUserId(userId) == null) {
             HealthProfile hp = new HealthProfile();
             hp.setUserId(userId);
+            hp.setName(req.getProfile().getName());
+            hp.setMrnNumber(req.getProfile().getMrnNumber());
             hp.setAge(req.getProfile().getAge());
             hp.setGender(req.getProfile().getGender());
             hp.setDiabetesType(req.getProfile().getDiabetesType());

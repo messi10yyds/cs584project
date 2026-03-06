@@ -2,7 +2,7 @@
   <div class="auth-wrap">
     <div class="auth-card">
       <div class="auth-brand">
-        <div class="auth-logoDot"></div>
+        <div class="auth-dot"></div>
         <div>
           <h1>Diacare Egypt</h1>
           <p class="auth-sub">Create your account</p>
@@ -35,7 +35,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref,computed } from "vue";
 import { useRouter } from "vue-router";
 import http from "../api/http";
 
@@ -50,6 +50,9 @@ function goLogin() {
   router.push("/login");
 }
 
+const canSubmit = computed(() => {
+  return username.value.trim() && password.value.trim();
+});
 async function onSubmit() {
   error.value = "";
   loading.value = true;
