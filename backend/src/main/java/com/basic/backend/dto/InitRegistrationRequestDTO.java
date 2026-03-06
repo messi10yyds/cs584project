@@ -7,7 +7,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class InitRegistrationRequest {
+public class InitRegistrationRequestDTO {
 
     @NotNull
     @Valid
@@ -31,6 +31,8 @@ public class InitRegistrationRequest {
 
     @Data
     public static class HealthProfileDTO {
+        private String name;
+        private String mrnNumber;
         private Integer age;
         private String gender;
         private String diabetesType;

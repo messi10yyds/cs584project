@@ -1,7 +1,7 @@
 package com.basic.backend.controller;
 
 import com.basic.backend.common.Result;
-import com.basic.backend.dto.InitStatusResponse;
+import com.basic.backend.dto.InitStatusResponseDTO;
 import com.basic.backend.mapper.HealthProfileMapper;
 import com.basic.backend.mapper.MedicationMapper;
 import com.basic.backend.mapper.UserScreeningMapper;
@@ -31,6 +31,6 @@ public class InitController {
 
         boolean initialized = profile && screenings; // meds 不强制
 
-        return Result.ok(new InitStatusResponse(initialized, profile, screenings, medications));
+        return Result.ok(new InitStatusResponseDTO(initialized, profile, screenings, medications));
     }
 }

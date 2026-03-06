@@ -1,46 +1,136 @@
 <template>
-  <div class="wrap">
-    <div class="card">
-      <h1>Init (2/3) - Screenings</h1>
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <div class="init-header">
+        <div class="brand-block">
+          <div class="auth-dot"></div>
 
-      <form @submit.prevent="onNext">
-        <h2 class="section">A1C</h2>
-        <label>Type</label>
-        <select v-model.number="a1cTypeId">
-          <option :value="1">A1C_6M</option>
-          <option :value="2">A1C_3M</option>
-        </select>
+          <div class="brand-text">
+            <div class="auth-title">Diabetes Care Assistant</div>
+            <div class="auth-sub">Initialization · Step 2 of 3</div>
+          </div>
+        </div>
 
-        <label>Last Completed (optional)</label>
-        <input v-model="a1cLast" type="date" />
+        <button type="button" class="logout-btn" @click="logout">
+          Log out
+        </button>
+      </div>
 
-        <h2 class="section">Eye Exam</h2>
-        <label>Type</label>
-        <select v-model.number="eyeTypeId">
-          <option :value="3">EYE_12M</option>
-          <option :value="4">EYE_6M</option>
-        </select>
+      <div class="init-step">Screening Information</div>
 
-        <label>Last Completed (optional)</label>
-        <input v-model="eyeLast" type="date" />
+      <label class="checkbox-row">
+        <input v-model="allowAutoFetch" type="checkbox" />
+        <span>
+          I allow the automatic retrieval of my last screening dates and results
+          from my medical record.
+        </span>
+      </label>
 
-        <h2 class="section">Kidney</h2>
-        <label>Type</label>
-        <select v-model.number="kidneyTypeId" disabled>
-          <option :value="5">KIDNEY_12M</option>
-        </select>
+      <form @submit.prevent="onNext" class="init-form">
+        <div class="screening-block">
+          <h2 class="section-title">A1C Test</h2>
 
-        <label>Last Completed (optional)</label>
-        <input v-model="kidneyLast" type="date" />
+          <label class="auth-label">
+            Do you remember when you last completed this test?
+          </label>
+          <select v-model="a1cRecall" class="auth-input">
+            <option value="">Select</option>
+            <option value="remember">Yes, I remember</option>
+            <option value="never">I have never done this test</option>
+            <option value="cannot_recall">
+              I have done it, but I cannot recall the year
+            </option>
+          </select>
 
-        <div class="row">
-          <button type="button" class="secondary" @click="onBack">Back</button>
-          <button :disabled="loading">{{ loading ? "Saving..." : "Next" }}</button>
+          <template v-if="a1cRecall === 'remember'">
+            <label class="auth-label">Last completed date</label>
+            <input v-model="a1cLast" type="date" class="auth-input" />
+
+            <label class="auth-label">Which situation best fits you?</label>
+            <select v-model.number="a1cTypeId" class="auth-input">
+              <option :value="1">
+                Meeting treatment and blood sugar goals (about every 6 months)
+              </option>
+              <option :value="2">
+                Treatment changed or goals not met (about every 3 months)
+              </option>
+            </select>
+          </template>
+        </div>
+
+        <div class="screening-block">
+          <h2 class="section-title">Eye Exam</h2>
+
+          <label class="auth-label">
+            Do you remember when you last completed this test?
+          </label>
+          <select v-model="eyeRecall" class="auth-input">
+            <option value="">Select</option>
+            <option value="remember">Yes, I remember</option>
+            <option value="never">I have never done this test</option>
+            <option value="cannot_recall">
+              I have done it, but I cannot recall the year
+            </option>
+          </select>
+
+          <template v-if="eyeRecall === 'remember'">
+            <label class="auth-label">Last completed date</label>
+            <input v-model="eyeLast" type="date" class="auth-input" />
+
+            <label class="auth-label">Which situation best fits you?</label>
+            <select v-model.number="eyeTypeId" class="auth-input">
+              <option :value="3">
+                No diabetes-related eye problems (about every year)
+              </option>
+              <option :value="4">
+                Diabetes-related eye problems present (about every 6 months)
+              </option>
+            </select>
+          </template>
+        </div>
+
+        <div class="screening-block">
+          <h2 class="section-title">Kidney Screening</h2>
+
+          <label class="auth-label">
+            Do you remember when you last completed this test?
+          </label>
+          <select v-model="kidneyRecall" class="auth-input">
+            <option value="">Select</option>
+            <option value="remember">Yes, I remember</option>
+            <option value="never">I have never done this test</option>
+            <option value="cannot_recall">
+              I have done it, but I cannot recall the year
+            </option>
+          </select>
+
+          <template v-if="kidneyRecall === 'remember'">
+            <label class="auth-label">Last completed date</label>
+            <input v-model="kidneyLast" type="date" class="auth-input" />
+          </template>
+        </div>
+
+        <div v-if="error" class="auth-alert auth-alert-error">
+          {{ error }}
+        </div>
+
+        <div v-if="ok" class="auth-alert auth-alert-success">
+          {{ ok }}
+        </div>
+
+        <div class="init-actions">
+          <button type="button" class="auth-secondary" @click="onBack">
+            Back
+          </button>
+          <button
+              type="submit"
+              class="auth-primary"
+              :disabled="loading || !allowAutoFetch"
+          >
+            {{ loading ? "Saving..." : "Next" }}
+          </button>
         </div>
       </form>
-
-      <p class="error" v-if="error">{{ error }}</p>
-      <p class="ok" v-if="ok">{{ ok }}</p>
     </div>
   </div>
 </template>
@@ -77,6 +167,17 @@ const eyeLast = ref(eyeExisting?.lastCompletedDate ?? "");
 const kidneyTypeId = ref(5);
 const kidneyLast = ref(kidneyExisting?.lastCompletedDate ?? "");
 
+const allowAutoFetch = ref(false);
+
+const a1cRecall = ref("");
+const eyeRecall = ref("");
+const kidneyRecall = ref("");
+
+function logout() {
+  localStorage.clear();
+  router.replace("/login");
+}
+
 function onBack() {
   router.push("/init/profile");
 }
@@ -84,7 +185,24 @@ function onBack() {
 function onNext() {
   error.value = "";
   ok.value = "";
+  if (!allowAutoFetch.value) {
+    error.value = "Please confirm the medical record access option.";
+    return;
+  }
   loading.value = true;
+
+  if (!a1cRecall.value) {
+    loading.value = false;
+    return (error.value = "Please answer the A1C question.");
+  }
+  if (!eyeRecall.value) {
+    loading.value = false;
+    return (error.value = "Please answer the Eye Exam question.");
+  }
+  if (!kidneyRecall.value) {
+    loading.value = false;
+    return (error.value = "Please answer the Kidney screening question.");
+  }
 
   // 轻量校验：确保三类都存在（typeId 合法）
   if (![1, 2].includes(a1cTypeId.value)) {
@@ -100,10 +218,41 @@ function onNext() {
     return (error.value = "Invalid Kidney type");
   }
 
+  if (a1cRecall.value === "remember" && !a1cLast.value) {
+    loading.value = false;
+    return (error.value = "Please enter the last completed date for A1C.");
+  }
+  if (eyeRecall.value === "remember" && !eyeLast.value) {
+    loading.value = false;
+    return (error.value = "Please enter the last completed date for Eye Exam.");
+  }
+  if (kidneyRecall.value === "remember" && !kidneyLast.value) {
+    loading.value = false;
+    return (error.value = "Please enter the last completed date for Kidney screening.");
+  }
+
+  const FALLBACK_OLD_DATE = "2000-01-01";
+
+  function resolveLastDate(recallValue, manualDate) {
+    if (recallValue === "remember") {
+      return manualDate || null;
+    }
+    return FALLBACK_OLD_DATE;
+  }
+
   const screenings = [
-    { screeningTypeId: a1cTypeId.value, lastCompletedDate: a1cLast.value || null },
-    { screeningTypeId: eyeTypeId.value, lastCompletedDate: eyeLast.value || null },
-    { screeningTypeId: kidneyTypeId.value, lastCompletedDate: kidneyLast.value || null },
+    {
+      screeningTypeId: a1cTypeId.value,
+      lastCompletedDate: resolveLastDate(a1cRecall.value, a1cLast.value),
+    },
+    {
+      screeningTypeId: eyeTypeId.value,
+      lastCompletedDate: resolveLastDate(eyeRecall.value, eyeLast.value),
+    },
+    {
+      screeningTypeId: kidneyTypeId.value,
+      lastCompletedDate: resolveLastDate(kidneyRecall.value, kidneyLast.value),
+    },
   ];
 
   saveInitDraft({ screenings });
@@ -115,58 +264,127 @@ function onNext() {
 </script>
 
 <style scoped>
-.wrap {
-  min-height: 100vh;
-  display: grid;
-  place-items: center;
-  padding: 24px;
+@import "../../styles/auth.css";
+
+/* 顶部标题 + logout */
+
+.init-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 18px;
 }
-.card {
-  width: 360px;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 20px;
+
+.brand-block {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
-.section {
-  margin-top: 16px;
-  margin-bottom: 6px;
-  font-size: 16px;
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
 }
-label {
-  display: block;
-  margin-top: 10px;
-  margin-bottom: 6px;
-  font-size: 14px;
-}
-input,
-select {
-  width: 100%;
-  padding: 10px 12px;
-  border: 1px solid #d1d5db;
+
+/* logout */
+
+.logout-btn {
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  color: #475569;
   border-radius: 10px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
 }
-.row {
+
+.logout-btn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+/* section title */
+
+.init-step {
+  margin-bottom: 14px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f766e;
+}
+
+/* form layout */
+
+.init-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.screening-block {
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 14px;
+  background: #fcfcfd;
+}
+
+.section-title {
+  margin: 0 0 10px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+/* consent row */
+
+.checkbox-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 14px;
+  font-size: 14px;
+  color: #334155;
+  line-height: 1.5;
+}
+
+.checkbox-row input {
+  margin-top: 3px;
+}
+
+/* buttons */
+
+.init-actions {
   display: flex;
   gap: 10px;
-  margin-top: 16px;
+  margin-top: 4px;
 }
-button {
-  flex: 1;
+
+.auth-secondary {
+  width: 120px;
   padding: 10px 12px;
-  border: 0;
-  border-radius: 10px;
-  cursor: pointer;
-}
-.secondary {
   border: 1px solid #d1d5db;
-  background: transparent;
+  border-radius: 12px;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 600;
+  color: #334155;
 }
-.error {
-  margin-top: 12px;
-  color: #b91c1c;
+
+.auth-secondary:hover {
+  background: #f8fafc;
 }
-.ok {
-  margin-top: 12px;
+
+.auth-primary {
+  margin-top: 0;
+  flex: 1;
+}
+
+/* success alert */
+
+.auth-alert-success {
+  background: #ecfdf5;
+  border: 1px solid #bbf7d0;
   color: #166534;
 }
 </style>

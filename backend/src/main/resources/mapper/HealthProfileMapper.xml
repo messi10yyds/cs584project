@@ -6,8 +6,12 @@
 <mapper namespace="com.basic.backend.mapper.HealthProfileMapper">
 
     <select id="selectByUserId" resultType="com.basic.backend.entity.HealthProfile">
-        SELECT id, user_id AS userId,
-               age, gender,
+        SELECT id,
+               user_id AS userId,
+               name,
+               mrn_number AS mrnNumber,
+               age,
+               gender,
                diabetes_type AS diabetesType,
                diagnosis_timeframe AS diagnosisTimeframe,
                created_at AS createdAt
@@ -19,9 +23,9 @@
     <insert id="insert" parameterType="com.basic.backend.entity.HealthProfile"
             useGeneratedKeys="true" keyProperty="id">
         INSERT INTO health_profiles
-            (user_id, age, gender, diabetes_type, diagnosis_timeframe, created_at)
+        (user_id, name, mrn_number, age, gender, diabetes_type, diagnosis_timeframe, created_at)
         VALUES
-            (#{userId}, #{age}, #{gender}, #{diabetesType}, #{diagnosisTimeframe}, NOW())
+            (#{userId}, #{name}, #{mrnNumber}, #{age}, #{gender}, #{diabetesType}, #{diagnosisTimeframe}, NOW())
     </insert>
 
 </mapper>

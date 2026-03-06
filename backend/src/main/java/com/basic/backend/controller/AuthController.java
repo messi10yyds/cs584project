@@ -1,15 +1,12 @@
 package com.basic.backend.controller;
 
 import com.basic.backend.common.Result;
-import com.basic.backend.dto.LoginRequest;
-import com.basic.backend.dto.RegisterRequest;
-import com.basic.backend.exception.BizException;
+import com.basic.backend.dto.LoginRequestDTO;
+import com.basic.backend.dto.RegisterRequestDTO;
 import com.basic.backend.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -19,7 +16,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public Result<?> login(@Valid @RequestBody LoginRequest req) {
+    public Result<?> login(@Valid @RequestBody LoginRequestDTO req) {
 
         return Result.ok(
                 authService.login(
@@ -30,7 +27,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public Result<?> register(@Valid @RequestBody RegisterRequest req) {
+    public Result<?> register(@Valid @RequestBody RegisterRequestDTO req) {
         return Result.ok(authService.register(req.getUsername(), req.getPassword()));
     }
 }

@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class InitStatusResponse {
+public class InitStatusResponseDTO {
     private boolean initialized;
     private boolean profile;
     private boolean screenings;

@@ -8,7 +8,8 @@ import java.time.LocalDateTime;
 public class HealthProfile {
     private Long id;
     private Long userId;
-
+    private String name;
+    private String mrnNumber;
     private Integer age;
     private String gender;
     private String diabetesType;
