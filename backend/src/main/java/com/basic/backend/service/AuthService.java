@@ -1,6 +1,6 @@
 package com.basic.backend.service;
 
-import com.basic.backend.dto.LoginResponse;
+import com.basic.backend.dto.LoginResponseDTO;
 import com.basic.backend.entity.User;
 import com.basic.backend.exception.BizException;
 import com.basic.backend.mapper.UserMapper;
@@ -24,7 +24,7 @@ public class AuthService {
     @Value("${jwt.expire-ms}")
     private long expireMs;
 
-    public LoginResponse login(String username, String password) {
+    public LoginResponseDTO login(String username, String password) {
         User user = userMapper.selectByUsername(username);
         if (user == null) {
             throw new BizException("Invalid username or password");
@@ -39,10 +39,10 @@ public class AuthService {
         LocalDateTime expireAt = LocalDateTime.now().plusNanos(expireMs * 1_000_000L);
         userTokenMapper.upsert(user.getId(), token, expireAt);
 
-        return new LoginResponse(user.getId(), token, "Bearer");
+        return new LoginResponseDTO(user.getId(), token, "Bearer");
     }
 
-    public LoginResponse register(String username, String password) {
+    public LoginResponseDTO register(String username, String password) {
 
         // 1) username 查重
         User existing = userMapper.selectByUsername(username);
@@ -63,6 +63,6 @@ public class AuthService {
         LocalDateTime expireAt = LocalDateTime.now().plusNanos(expireMs * 1_000_000L);
         userTokenMapper.upsert(user.getId(), token, expireAt);
 
-        return new LoginResponse(user.getId(), token, "Bearer");
+        return new LoginResponseDTO(user.getId(), token, "Bearer");
     }
 }

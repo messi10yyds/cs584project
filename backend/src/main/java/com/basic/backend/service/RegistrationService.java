@@ -1,6 +1,6 @@
 package com.basic.backend.service;
 
-import com.basic.backend.dto.InitRegistrationRequest;
+import com.basic.backend.dto.InitRegistrationRequestDTO;
 import com.basic.backend.entity.HealthProfile;
 import com.basic.backend.entity.Medication;
 import com.basic.backend.entity.UserScreening;
@@ -11,7 +11,6 @@ import com.basic.backend.mapper.ScreeningTypeMapper;
 import com.basic.backend.mapper.UserScreeningMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -26,7 +25,7 @@ public class RegistrationService {
     private final UserScreeningMapper userScreeningMapper;
     private final ScreeningTypeMapper screeningTypeMapper;
     private final MedicationMapper medicationMapper;
-    public void initProfile(Long userId, InitRegistrationRequest req) {
+    public void initProfile(Long userId, InitRegistrationRequestDTO req) {
 
         // 0) 基本空指针保护（可选，但建议）
         if (req == null || req.getProfile() == null) {
@@ -108,7 +107,7 @@ public class RegistrationService {
         }
     }
 
-    private void validateMutualExclusion(InitRegistrationRequest req) {
+    private void validateMutualExclusion(InitRegistrationRequestDTO req) {
         // 你的 screening_types id 固定：
         // A1C: 1,2; EYE: 3,4; KIDNEY: 5
         boolean hasA1C = false;

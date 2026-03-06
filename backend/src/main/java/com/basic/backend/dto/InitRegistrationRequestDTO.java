@@ -7,7 +7,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class InitRegistrationRequest {
+public class InitRegistrationRequestDTO {
 
     @NotNull
     @Valid
