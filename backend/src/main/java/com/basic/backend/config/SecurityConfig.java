@@ -60,8 +60,20 @@ public class SecurityConfig {
                 // ✅ 第2点：放行 OPTIONS 预检 + /error + /auth/**
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/error").permitAll()
-                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers(
+                                "/",
+                                "/index.html",
+                                "/favicon.ico",
+                                "/assets/**",
+                                "/error",
+                                "/login",
+                                "/register",
+                                "/init",
+                                "/init/**",
+                                "/dashboard",
+                                "/auth/**",
+                                "vite.svg"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
 
