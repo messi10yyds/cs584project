@@ -1,13 +1,13 @@
 server:
-  port: 8080
+  port: ${PORT:8080}
 
 spring:
   application:
     name: backend
   datasource:
-    url: jdbc:mysql://localhost:3306/diabetes_mvp?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-    username: root
-    password: lyfmessi2001
+    url: ${DB_URL:jdbc:mysql://localhost:3306/diabetes_mvp?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 mybatis:
@@ -17,6 +17,5 @@ mybatis:
     map-underscore-to-camel-case: true
 
 jwt:
-  # HS256 secret 建议 >= 32 字符（否则 jjwt 可能报 key 太短）
-  secret: "replace_with_a_very_long_secret_key_at_least_32_chars"
-  expire-ms: 86400000
+  secret: ${JWT_SECRET:replace_with_a_very_long_secret_key_at_least_32_chars}
+  expire-ms: ${JWT_EXPIRE_MS:86400000}
