@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.basic.backend.mapper.MedicationDailyLogMapper">
+
+    <select id="selectByUserIdAndMedicationIdAndLogDate"
+            resultType="com.basic.backend.entity.MedicationDailyLog">
+        select id,
+               medication_id,
+               user_id,
+               log_date,
+               doses_taken,
+               created_at
+        from medication_daily_logs
+        where user_id = #{userId}
+          and medication_id = #{medicationId}
+          and log_date = #{logDate}
+            limit 1
+    </select>
+
+    <insert id="insert" parameterType="com.basic.backend.entity.MedicationDailyLog"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into medication_daily_logs (
+            medication_id,
+            user_id,
+            log_date,
+            doses_taken,
+            created_at
+        ) values (
+                     #{medicationId},
+                     #{userId},
+                     #{logDate},
+                     #{dosesTaken},
+                     #{createdAt}
+                 )
+    </insert>
+
+    <update id="updateDosesTakenById">
+        update medication_daily_logs
+        set doses_taken = #{dosesTaken}
+        where id = #{id}
+    </update>
+
+</mapper>

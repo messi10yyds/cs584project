@@ -4,6 +4,7 @@ import RegisterView from "../views/RegisterView.vue";
 import DashboardView from "../views/DashboardView.vue";
 import http from "../api/http";
 import { loadInitDraft } from "../utils/initDraft";
+import OrganDetailView from "../views/OrganDetailView.vue";
 
 const router = createRouter({
     history: createWebHistory(),
@@ -12,6 +13,7 @@ const router = createRouter({
         { path: "/login", component: LoginView },
         { path: "/register", component: RegisterView },
         { path: "/dashboard", component: DashboardView },
+        {path: "/organs/:organ", name: "organ-detail", component: OrganDetailView,},
 
         { path: "/init", redirect: "/init/profile" },
         { path: "/init/profile", component: () => import("../views/init/InitProfileView.vue") },

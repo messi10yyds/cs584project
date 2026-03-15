@@ -30,4 +30,32 @@
             (#{userId}, #{screeningTypeId}, #{lastCompletedDate}, #{nextDueDate}, NOW(), NOW())
     </insert>
 
+    <select id="selectDashboardScreeningsByUserId"
+            resultType="com.basic.backend.dto.DashboardScreeningQueryDTO">
+        select us.id as user_screening_id,
+               us.screening_type_id as screening_type_id,
+               st.name as screening_type,
+               us.last_completed_date,
+               st.recommended_interval_days
+        from user_screenings us
+                 join screening_types st on us.screening_type_id = st.id
+        where us.user_id = #{userId}
+          and st.is_active = 1
+        order by us.id asc
+    </select>
+
+    <select id="selectDashboardScreeningByUserIdAndScreeningTypeId"
+            resultType="com.basic.backend.dto.DashboardScreeningQueryDTO">
+        select
+            us.id as user_screening_id,
+            st.id as screening_type_id,
+            st.name as screening_type,
+            us.last_completed_date,
+            st.recommended_interval_days
+        from user_screenings us
+                 join screening_types st on us.screening_type_id = st.id
+        where us.user_id = #{userId}
+          and us.screening_type_id = #{screeningTypeId}
+            limit 1
+    </select>
 </mapper>

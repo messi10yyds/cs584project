@@ -23,4 +23,9 @@
         VALUES (#{username}, #{passwordHash})
     </insert>
 
+    <select id="selectById" resultType="com.basic.backend.entity.User">
+        select id, username, password_hash
+        from users
+        where id = #{id}
+    </select>
 </mapper>

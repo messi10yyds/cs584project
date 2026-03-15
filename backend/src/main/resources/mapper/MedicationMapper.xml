@@ -30,4 +30,48 @@
             (#{userId}, #{name}, #{isActive}, #{dosage}, #{expectedDosesPerDay}, NOW())
     </insert>
 
+    <select id="selectDashboardMedications"
+            resultType="com.basic.backend.dto.DashboardMedicationQueryDTO">
+
+        select
+            m.id as medication_id,
+            m.name,
+            m.dosage,
+            m.expected_doses_per_day,
+
+            coalesce(sum(l.doses_taken),0) as taken_today
+
+        from medications m
+
+                 left join medication_daily_logs l
+                           on m.id = l.medication_id
+                               and l.user_id = m.user_id
+                               and l.log_date = curdate()
+
+        where m.user_id = #{userId}
+          and m.is_active = 1
+
+        group by
+            m.id,
+            m.name,
+            m.dosage,
+            m.expected_doses_per_day
+
+    </select>
+
+    <select id="selectActiveByIdAndUserId"
+            resultType="com.basic.backend.entity.Medication">
+        select id,
+               user_id,
+               name,
+               is_active,
+               dosage,
+               expected_doses_per_day,
+               created_at
+        from medications
+        where id = #{id}
+          and user_id = #{userId}
+          and is_active = 1
+            limit 1
+    </select>
 </mapper>

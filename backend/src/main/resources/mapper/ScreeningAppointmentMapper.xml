@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.basic.backend.mapper.ScreeningAppointmentMapper">
+
+    <select id="selectNearestScheduledAppointment"
+            resultType="com.basic.backend.entity.ScreeningAppointment">
+        select id,
+               user_id,
+               screening_type_id,
+               scheduled_for,
+               status,
+               created_at
+        from screening_appointments
+        where user_id = #{userId}
+          and screening_type_id = #{screeningTypeId}
+          and status = 'SCHEDULED'
+          and scheduled_for >= #{today}
+        order by scheduled_for asc, id asc
+            limit 1
+    </select>
+
+</mapper>

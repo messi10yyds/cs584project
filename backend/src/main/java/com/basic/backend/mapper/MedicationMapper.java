@@ -1,5 +1,6 @@
 package com.basic.backend.mapper;
 
+import com.basic.backend.dto.DashboardMedicationQueryDTO;
 import com.basic.backend.entity.Medication;
 import org.apache.ibatis.annotations.Param;
 
@@ -11,4 +12,8 @@ public interface MedicationMapper {
     int countByUserId(@Param("userId") Long userId);
 
     List<Medication> selectByUserId(@Param("userId") Long userId);
+
+    List<DashboardMedicationQueryDTO> selectDashboardMedications(@Param("userId") Long userId);
+
+    Medication selectActiveByIdAndUserId(@Param("id") Long id, @Param("userId") Long userId);
 }
