@@ -22,4 +22,51 @@
             limit 1
     </select>
 
+    <select id="selectActiveAppointment"
+            resultType="com.basic.backend.entity.ScreeningAppointment">
+        select id,
+               user_id,
+               screening_type_id,
+               scheduled_for,
+               status,
+               created_at
+        from screening_appointments
+        where user_id = #{userId}
+          and screening_type_id = #{screeningTypeId}
+          and status = 'SCHEDULED'
+          and scheduled_for >= #{today}
+        order by scheduled_for asc
+            limit 1
+    </select>
+
+    <insert id="insert" parameterType="com.basic.backend.entity.ScreeningAppointment">
+        insert into screening_appointments
+        (
+            user_id,
+            screening_type_id,
+            scheduled_for,
+            status,
+            created_at
+        )
+        values
+            (
+                #{userId},
+                #{screeningTypeId},
+                #{scheduledFor},
+                #{status},
+                #{createdAt}
+            )
+    </insert>
+
+    <update id="cancelAppointment">
+        update screening_appointments
+        set status = 'CANCELLED'
+        where id = #{appointmentId}
+    </update>
+
+    <update id="completeAppointment">
+        update screening_appointments
+        set status = 'COMPLETED'
+        where id = #{appointmentId}
+    </update>
 </mapper>

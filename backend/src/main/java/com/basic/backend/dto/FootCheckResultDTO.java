@@ -8,29 +8,18 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DashboardScreeningDTO {
-
-    private Long userScreeningId;
-
-    private Long screeningTypeId;
-
-    private String screeningType;
-
-    private String displayName;
-
-    private String status;
+public class FootCheckResultDTO {
 
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate dueDate;
+    private LocalDate checkinDate;
 
-    @JsonSerialize(using = LocalDateSerializer.class)
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate appointmentDate;
-
+    private String riskLevel;
+    private String title;
+    private String message;
+    private String hotline;
 }

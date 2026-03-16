@@ -12,7 +12,7 @@ public class ScreeningAppointment {
 
     private Long userId;
 
-    private Integer screeningTypeId;
+    private Long screeningTypeId;
 
     private LocalDate scheduledFor;
 

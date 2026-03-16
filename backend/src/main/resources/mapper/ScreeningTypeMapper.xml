@@ -11,4 +11,13 @@
         WHERE id = #{id} AND is_active = true
     </select>
 
+    <select id="selectById" resultType="com.basic.backend.entity.ScreeningType">
+        select id,
+               name,
+               is_active,
+               recommended_interval_days
+        from screening_types
+        where id = #{id}
+            limit 1
+    </select>
 </mapper>

@@ -4,6 +4,7 @@ import com.basic.backend.dto.DashboardScreeningQueryDTO;
 import com.basic.backend.entity.UserScreening;
 import org.apache.ibatis.annotations.Param;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface UserScreeningMapper {
@@ -17,4 +18,12 @@ public interface UserScreeningMapper {
 
     DashboardScreeningQueryDTO selectDashboardScreeningByUserIdAndScreeningTypeId(@Param("userId") Long userId,
                                                                                   @Param("screeningTypeId") Long screeningTypeId);
+
+    UserScreening selectByUserIdAndScreeningTypeId(@Param("userId") Long userId,
+                                                   @Param("screeningTypeId") Long screeningTypeId);
+
+    int updateCompletionByUserIdAndScreeningTypeId(@Param("userId") Long userId,
+                                                   @Param("screeningTypeId") Long screeningTypeId,
+                                                   @Param("lastCompletedDate") LocalDate lastCompletedDate,
+                                                   @Param("nextDueDate") LocalDate nextDueDate);
 }

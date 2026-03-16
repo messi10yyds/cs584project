@@ -14,4 +14,21 @@ public interface ScreeningAppointmentMapper {
             @Param("screeningTypeId") Long screeningTypeId,
             @Param("today") LocalDate today
     );
+
+    int insert(ScreeningAppointment appointment);
+
+    ScreeningAppointment selectLatestAppointment(
+            @Param("userId") Long userId,
+            @Param("screeningTypeId") Long screeningTypeId
+    );
+
+    ScreeningAppointment selectActiveAppointment(
+            @Param("userId") Long userId,
+            @Param("screeningTypeId") Long screeningTypeId,
+            @Param("today") LocalDate today
+    );
+
+    int cancelAppointment(@Param("appointmentId") Long appointmentId);
+
+    int completeAppointment(@Param("appointmentId") Long appointmentId);
 }

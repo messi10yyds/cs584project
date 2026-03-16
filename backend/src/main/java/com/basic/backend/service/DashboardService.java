@@ -18,7 +18,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class DashboardService {
@@ -29,6 +31,8 @@ public class DashboardService {
     private final MedicationMapper medicationMapper;
     private final MedicationDailyLogMapper medicationDailyLogMapper;
     private final ScreeningAppointmentMapper screeningAppointmentMapper;
+    private final SymptomQuestionMapper symptomQuestionMapper;
+    private final SymptomCheckinMapper symptomCheckinMapper;
 
     private static final LocalDate UNKNOWN_LAST_COMPLETED_DATE = LocalDate.of(2000, 1, 1);
 //    public DashboardService(UserMapper userMapper, HealthProfileMapper healthProfileMapper, UserScreeningMapper userScreeningMapper) {
@@ -112,11 +116,11 @@ public class DashboardService {
                             item.getScreeningTypeId(),
                             LocalDate.now()
                     );
-
                     LocalDate appointmentDate = appointment == null ? null : appointment.getScheduledFor();
 
                     return new DashboardScreeningDTO(
                             item.getUserScreeningId(),
+                            item.getScreeningTypeId(),
                             item.getScreeningType(),
                             toDisplayName(item.getScreeningType()),
                             status,
@@ -281,7 +285,43 @@ public class DashboardService {
     }
 
     private DashboardRiskAlertDTO buildFootRiskAlert(Long userId) {
-        return null;
+        LocalDate latestCheckinDate = symptomCheckinMapper.selectLatestCheckinDateByUserId(userId);
+        if (latestCheckinDate == null) {
+            return null;
+        }
+
+        List<SymptomCheckin> latestCheckins =
+                symptomCheckinMapper.selectByUserIdAndCheckinDate(userId, latestCheckinDate);
+
+        if (latestCheckins == null || latestCheckins.isEmpty()) {
+            return null;
+        }
+
+        boolean hasRisk = false;
+        for (SymptomCheckin checkin : latestCheckins) {
+            if (Boolean.TRUE.equals(checkin.getAnswer())) {
+                hasRisk = true;
+                break;
+            }
+        }
+
+        if (!hasRisk) {
+            return null;
+        }
+
+        String message = buildFootRiskAlertMessage(latestCheckins);
+        if (message == null) {
+            message = "One or more foot symptoms were reported in your latest foot check.";
+        }
+
+        return new DashboardRiskAlertDTO(
+                "FOOT_SYMPTOM_ALERT",
+                "HIGH",
+                "Foot symptoms reported",
+                message,
+                "foot",
+                "VIEW"
+        );
     }
 
     private DashboardRiskAlertDTO buildMedicationRiskAlert(Long userId) {
@@ -346,4 +386,41 @@ public class DashboardService {
         return "COMPLETED";
     }
 
+    private String resolveFootSymptom(Long questionId) {
+        if (questionId == null) {
+            return "foot symptoms";
+        }
+
+        return switch (questionId.intValue()) {
+            case 1 -> "skin sores or blisters";
+            case 2 -> "numbness or tingling";
+            case 3 -> "color changes or swelling";
+            case 4 -> "slow-healing wounds";
+            case 5 -> "pain or burning sensation";
+            default -> "foot symptoms";
+        };
+    }
+
+    private String buildFootRiskAlertMessage(List<SymptomCheckin> checkins) {
+        List<String> symptoms = new java.util.ArrayList<>();
+
+        for (SymptomCheckin checkin : checkins) {
+            if (Boolean.TRUE.equals(checkin.getAnswer())) {
+                String symptom = resolveFootSymptom(checkin.getQuestionId());
+                if (!symptoms.contains(symptom)) {
+                    symptoms.add(symptom);
+                }
+            }
+        }
+
+        if (symptoms.isEmpty()) {
+            return null;
+        }
+
+        if (symptoms.size() == 1) {
+            return "Possible foot symptom reported: " + symptoms.get(0) + ".";
+        }
+
+        return "Possible foot symptoms reported: " + String.join(", ", symptoms) + ".";
+    }
 }

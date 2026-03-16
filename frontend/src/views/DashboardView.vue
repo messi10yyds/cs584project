@@ -92,7 +92,11 @@
                   <div class="risk-title">{{ alert.title }}</div>
                   <div class="risk-message">{{ alert.message }}</div>
 
-                  <button class="risk-link-btn" type="button">
+                  <button
+                      class="risk-link-btn"
+                      type="button"
+                      @click="handleAlertAction(alert)"
+                  >
                     → {{ alertActionText(alert) }}
                   </button>
                 </div>
@@ -196,9 +200,21 @@
                 class="screening-table-row"
             >
               <div class="screening-cell screening-test-cell">
-    <span class="screening-test-icon">
-      {{ screeningIcon(screening.screeningType) }}
-    </span>
+                <span class="screening-test-icon">
+                  <!-- 字符串图标 -->
+                  <span v-if="typeof screeningIcon(screening.screeningType) === 'string'">
+                    {{ screeningIcon(screening.screeningType) }}
+                  </span>
+                  <!-- Vue 组件图标 -->
+                  <component
+                      v-else
+                      :is="screeningIcon(screening.screeningType)"
+                      :size="22"
+                      class="screening-svg-icon"
+                      style="display: block; transform: translateY(3px);"
+                  />
+                </span>
+
                 <span class="screening-test-name">{{ screening.displayName }}</span>
               </div>
 
@@ -220,7 +236,11 @@
               </div>
 
               <div class="screening-cell">
-                <button class="screening-action-btn" type="button">
+                <button
+                    class="screening-action-btn"
+                    type="button"
+                    @click="goToAppointment(screening, 'dashboard')"
+                >
                   {{ screening.appointmentDate ? "Reschedule" : "Book" }}
                 </button>
               </div>
@@ -320,7 +340,7 @@ function screeningStatusClass(status) {
 
 function screeningIcon(screeningType) {
   if (screeningType?.startsWith("EYE")) return "👁️";
-  if (screeningType?.startsWith("KIDNEY")) return "🫙";
+  if (screeningType?.startsWith("KIDNEY")) return KidneyIcon;
   if (screeningType?.startsWith("A1C")) return "🩸";
   return "📄";
 }
@@ -417,6 +437,13 @@ function logout() {
   router.push("/login");
 }
 
+function handleAlertAction(alert) {
+  if (alert.relatedKey === "foot") {
+    router.push("/foot");
+    return;
+  }
+}
+
 onMounted(() => {
   fetchOverview();
 });
@@ -425,6 +452,34 @@ function goToOrganDetail(organKey) {
   if (organKey === "eye" || organKey === "kidney" || organKey === "heart") {
     router.push(`/organs/${organKey}`);
   }
+  if (organKey === "foot") {
+    router.push("/foot");
+    return;
+  }
+}
+
+function screeningTypeToOrgan(screeningType) {
+  if (screeningType?.startsWith("EYE")) return "eye";
+  if (screeningType?.startsWith("KIDNEY")) return "kidney";
+  if (screeningType?.startsWith("A1C")) return "heart";
+  return "";
+}
+
+function goToAppointment(screening, source = "dashboard") {
+  if (!screening?.screeningTypeId) {
+    alert("Missing screeningTypeId");
+    return;
+  }
+
+  const organ = screeningTypeToOrgan(screening.screeningType);
+
+  router.push({
+    path: `/screenings/${screening.screeningTypeId}/appointment`,
+    query: {
+      organ,
+      source,
+    },
+  });
 }
 </script>
 

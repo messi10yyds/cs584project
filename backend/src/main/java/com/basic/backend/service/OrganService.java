@@ -66,6 +66,7 @@ public class OrganService {
 
             DashboardScreeningDTO screeningDTO = new DashboardScreeningDTO(
                     item.getUserScreeningId(),
+                    item.getScreeningTypeId(),
                     item.getScreeningType(),
                     toDisplayName(item.getScreeningType()),
                     status,
@@ -108,6 +109,7 @@ public class OrganService {
 
             DashboardScreeningDTO screeningDTO = new DashboardScreeningDTO(
                     item.getUserScreeningId(),
+                    item.getScreeningTypeId(),
                     item.getScreeningType(),
                     toDisplayName(item.getScreeningType()),
                     status,
@@ -154,6 +156,7 @@ public class OrganService {
 
             DashboardScreeningDTO screeningDTO = new DashboardScreeningDTO(
                     item.getUserScreeningId(),
+                    item.getScreeningTypeId(),
                     item.getScreeningType(),
                     toDisplayName(item.getScreeningType()),
                     status,

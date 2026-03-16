@@ -91,6 +91,7 @@
                     class="screening-btn"
                     :class="screeningButtonClass(detail.screening.status)"
                     type="button"
+                    @click="goToAppointment('organ-screening')"
                 >
                   {{ detail.screening.appointmentDate ? "Reschedule" : "Book now" }}
                 </button>
@@ -245,6 +246,7 @@
                 v-if="detail.screening"
                 class="exam-book-btn"
                 type="button"
+                @click="goToAppointment('organ-checkups')"
             >
               📅
               {{
@@ -510,6 +512,21 @@ watch(
       fetchOrganDetail();
     }
 );
+
+function goToAppointment(source = "organ-detail") {
+  if (!detail.screening?.screeningTypeId) {
+    alert("Missing screeningTypeId");
+    return;
+  }
+
+  router.push({
+    path: `/screenings/${detail.screening.screeningTypeId}/appointment`,
+    query: {
+      organ: detail.organ,
+      source,
+    },
+  });
+}
 </script>
 
 <style scoped>

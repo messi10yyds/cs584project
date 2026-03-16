@@ -58,4 +58,28 @@
           and us.screening_type_id = #{screeningTypeId}
             limit 1
     </select>
+
+    <select id="selectByUserIdAndScreeningTypeId"
+            resultType="com.basic.backend.entity.UserScreening">
+        select id,
+               user_id,
+               screening_type_id,
+               last_completed_date,
+               next_due_date,
+               created_at,
+               updated_at
+        from user_screenings
+        where user_id = #{userId}
+          and screening_type_id = #{screeningTypeId}
+            limit 1
+    </select>
+
+    <update id="updateCompletionByUserIdAndScreeningTypeId">
+        update user_screenings
+        set last_completed_date = #{lastCompletedDate},
+            next_due_date = #{nextDueDate},
+            updated_at = now()
+        where user_id = #{userId}
+          and screening_type_id = #{screeningTypeId}
+    </update>
 </mapper>

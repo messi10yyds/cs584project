@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.basic.backend.mapper.SymptomCheckinMapper">
+
+    <select id="selectByUserIdAndCheckinDate"
+            resultType="com.basic.backend.entity.SymptomCheckin">
+        SELECT id,
+               user_id AS userId,
+               question_id AS questionId,
+               answer,
+               checkin_date AS checkinDate
+        FROM symptom_checkins
+        WHERE user_id = #{userId}
+          AND checkin_date = #{checkinDate}
+        ORDER BY question_id ASC, id ASC
+    </select>
+
+    <select id="selectLatestCheckinDateByUserId" resultType="java.time.LocalDate">
+        SELECT MAX(checkin_date)
+        FROM symptom_checkins
+        WHERE user_id = #{userId}
+    </select>
+
+    <insert id="insert" parameterType="com.basic.backend.entity.SymptomCheckin">
+        INSERT INTO symptom_checkins (
+            user_id,
+            question_id,
+            answer,
+            checkin_date
+        )
+        VALUES (
+                   #{userId},
+                   #{questionId},
+                   #{answer},
+                   #{checkinDate}
+               )
+    </insert>
+
+    <update id="updateAnswerByUserIdAndQuestionIdAndCheckinDate">
+        UPDATE symptom_checkins
+        SET answer = #{answer}
+        WHERE user_id = #{userId}
+          AND question_id = #{questionId}
+          AND checkin_date = #{checkinDate}
+    </update>
+
+</mapper>

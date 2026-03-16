@@ -13,8 +13,9 @@ const router = createRouter({
         { path: "/login", component: LoginView },
         { path: "/register", component: RegisterView },
         { path: "/dashboard", component: DashboardView },
-        {path: "/organs/:organ", name: "organ-detail", component: OrganDetailView,},
-
+        { path: "/organs/:organ", name: "organ-detail", component: OrganDetailView,},
+        { path: "/foot", name: "foot-check", component: () => import("../views/FootView.vue") },
+        { path: "/screenings/:screeningTypeId/appointment", name: "screening-appointment", component: () => import("../views/ScreeningAppointmentView.vue"),},
         { path: "/init", redirect: "/init/profile" },
         { path: "/init/profile", component: () => import("../views/init/InitProfileView.vue") },
         { path: "/init/screenings", component: () => import("../views/init/InitScreeningsView.vue") },
