@@ -186,12 +186,9 @@ public class DashboardService {
     }
 
     private List<DashboardRiskAlertDTO> buildRiskAlerts(List<DashboardScreeningDTO> screenings, Long userId) {
-        List<DashboardRiskAlertDTO> alerts = new java.util.ArrayList<>();
+        List<DashboardRiskAlertDTO> alerts = new ArrayList<>();
 
-        DashboardRiskAlertDTO screeningAlert = buildScreeningRiskAlert(screenings);
-        if (screeningAlert != null) {
-            alerts.add(screeningAlert);
-        }
+        alerts.addAll(buildScreeningRiskAlerts(screenings));
 
         DashboardRiskAlertDTO footAlert = buildFootRiskAlert(userId);
         if (footAlert != null) {
@@ -204,55 +201,68 @@ public class DashboardService {
         if (medicationAlert != null) {
             alerts.add(medicationAlert);
         }
+
         return alerts;
     }
 
-    private DashboardRiskAlertDTO buildScreeningRiskAlert(List<DashboardScreeningDTO> screenings) {
+    private List<DashboardRiskAlertDTO> buildScreeningRiskAlerts(List<DashboardScreeningDTO> screenings) {
+        List<DashboardRiskAlertDTO> alerts = new ArrayList<>();
+
         if (screenings == null || screenings.isEmpty()) {
-            return null;
+            return alerts;
         }
 
-        DashboardScreeningDTO overdue = screenings.stream()
-                .filter(item -> "OVERDUE".equals(item.getStatus()))
+        List<DashboardScreeningDTO> sorted = screenings.stream()
                 .filter(item -> isRiskAlertSupportedScreening(item.getScreeningType()))
-                .findFirst()
-                .orElse(null);
+                .sorted((a, b) -> {
+                    int statusOrderA = screeningAlertOrder(a.getStatus());
+                    int statusOrderB = screeningAlertOrder(b.getStatus());
+                    if (statusOrderA != statusOrderB) {
+                        return Integer.compare(statusOrderA, statusOrderB);
+                    }
 
-        if (overdue != null) {
-            String organKey = toOrganKey(overdue.getScreeningType());
-            String displayName = overdue.getDisplayName();
+                    int organOrderA = organAlertOrder(toOrganKey(a.getScreeningType()));
+                    int organOrderB = organAlertOrder(toOrganKey(b.getScreeningType()));
+                    return Integer.compare(organOrderA, organOrderB);
+                })
+                .toList();
 
-            return new DashboardRiskAlertDTO(
-                    "SCREENING_OVERDUE",
-                    "HIGH",
-                    displayName + " overdue",
-                    "Your " + displayName + " is overdue.",
-                    organKey,
-                    "VIEW"
-            );
+        for (DashboardScreeningDTO item : sorted) {
+            if ("OVERDUE".equals(item.getStatus())) {
+                alerts.add(new DashboardRiskAlertDTO(
+                        "SCREENING_OVERDUE",
+                        "HIGH",
+                        item.getDisplayName() + " overdue",
+                        "Your " + item.getDisplayName() + " is overdue.",
+                        toOrganKey(item.getScreeningType()),
+                        "VIEW"
+                ));
+            } else if ("DUE_SOON".equals(item.getStatus())) {
+                alerts.add(new DashboardRiskAlertDTO(
+                        "SCREENING_DUE_SOON",
+                        "MEDIUM",
+                        item.getDisplayName() + " due soon",
+                        "Your " + item.getDisplayName() + " is coming due within 7 days.",
+                        toOrganKey(item.getScreeningType()),
+                        "VIEW"
+                ));
+            }
         }
 
-        DashboardScreeningDTO dueSoon = screenings.stream()
-                .filter(item -> "DUE_SOON".equals(item.getStatus()))
-                .filter(item -> isRiskAlertSupportedScreening(item.getScreeningType()))
-                .findFirst()
-                .orElse(null);
+        return alerts;
+    }
 
-        if (dueSoon != null) {
-            String organKey = toOrganKey(dueSoon.getScreeningType());
-            String displayName = dueSoon.getDisplayName();
+    private int screeningAlertOrder(String status) {
+        if ("OVERDUE".equals(status)) return 0;
+        if ("DUE_SOON".equals(status)) return 1;
+        return 99;
+    }
 
-            return new DashboardRiskAlertDTO(
-                    "SCREENING_DUE_SOON",
-                    "MEDIUM",
-                    displayName + " due soon",
-                    "Your " + displayName + " is coming due within 7 days.",
-                    organKey,
-                    "VIEW"
-            );
-        }
-
-        return null;
+    private int organAlertOrder(String organKey) {
+        if ("eye".equals(organKey)) return 0;
+        if ("kidney".equals(organKey)) return 1;
+        if ("heart".equals(organKey)) return 2;
+        return 99;
     }
 
     private DashboardRiskAlertDTO buildDefaultFootAlert() {
@@ -272,7 +282,7 @@ public class DashboardService {
         }
 
         return switch (screeningType) {
-            case "A1C_6M", "A1C_3M" -> "general";
+            case "A1C_6M", "A1C_3M" -> "heart";
             case "EYE_12M", "EYE_6M" -> "eye";
             case "KIDNEY_12M" -> "kidney";
             default -> "screening";
@@ -281,20 +291,35 @@ public class DashboardService {
 
     private boolean isRiskAlertSupportedScreening(String screeningType) {
         String organKey = toOrganKey(screeningType);
-        return "eye".equals(organKey) || "kidney".equals(organKey);
+        return "eye".equals(organKey) || "kidney".equals(organKey) || "heart".equals(organKey);
     }
 
     private DashboardRiskAlertDTO buildFootRiskAlert(Long userId) {
         LocalDate latestCheckinDate = symptomCheckinMapper.selectLatestCheckinDateByUserId(userId);
+
         if (latestCheckinDate == null) {
-            return null;
+            return new DashboardRiskAlertDTO(
+                    "FOOT_CHECK_MISSING",
+                    "LOW",
+                    "Foot check not completed",
+                    "You have not completed a foot symptom check yet.",
+                    "foot",
+                    "VIEW"
+            );
         }
 
         List<SymptomCheckin> latestCheckins =
                 symptomCheckinMapper.selectByUserIdAndCheckinDate(userId, latestCheckinDate);
 
         if (latestCheckins == null || latestCheckins.isEmpty()) {
-            return null;
+            return new DashboardRiskAlertDTO(
+                    "FOOT_CHECK_MISSING",
+                    "LOW",
+                    "Foot check not completed",
+                    "You have not completed a foot symptom check yet.",
+                    "foot",
+                    "VIEW"
+            );
         }
 
         boolean hasRisk = false;
@@ -305,20 +330,27 @@ public class DashboardService {
             }
         }
 
-        if (!hasRisk) {
-            return null;
-        }
+        if (hasRisk) {
+            String message = buildFootRiskAlertMessage(latestCheckins);
+            if (message == null) {
+                message = "One or more foot symptoms were reported in your latest foot check.";
+            }
 
-        String message = buildFootRiskAlertMessage(latestCheckins);
-        if (message == null) {
-            message = "One or more foot symptoms were reported in your latest foot check.";
+            return new DashboardRiskAlertDTO(
+                    "FOOT_SYMPTOM_ALERT",
+                    "HIGH",
+                    "Foot symptoms reported",
+                    message,
+                    "foot",
+                    "VIEW"
+            );
         }
 
         return new DashboardRiskAlertDTO(
-                "FOOT_SYMPTOM_ALERT",
-                "HIGH",
-                "Foot symptoms reported",
-                message,
+                "FOOT_CHECK_NORMAL",
+                "LOW",
+                "Foot check looks normal",
+                "Your latest foot symptom check did not show any concerning symptoms.",
                 "foot",
                 "VIEW"
         );

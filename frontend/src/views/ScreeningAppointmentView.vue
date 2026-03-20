@@ -168,8 +168,10 @@ const displayScreeningName = computed(() => {
   const raw = detail.screeningName || "";
 
   if (raw === "EYE_12M") return "Eye Exam";
+  if (raw === "EYE_6M") return "Eye Exam";
   if (raw === "KIDNEY_12M") return "Kidney Test";
   if (raw === "A1C_6M") return "A1C Test";
+  if (raw === "A1C_12M") return "A1C Test";
 
   return raw || "Screening Appointment";
 });
