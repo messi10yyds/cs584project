@@ -72,7 +72,9 @@ public class SecurityConfig {
                                 "/init/**",
                                 "/dashboard",
                                 "/auth/**",
-                                "vite.svg"
+                                "/vite.svg",
+                                "/*.jpg",
+                                "/FOOT_SYMPTOMS.jpg"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
