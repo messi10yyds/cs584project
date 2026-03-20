@@ -287,8 +287,11 @@ function alertClass(level) {
 
 function alertActionText(alert) {
   if (alert.actionType === "VIEW") {
-    if (alert.relatedKey === "foot") return "View foot check results";
+    if (alert.type === "FOOT_CHECK_MISSING") return "Start foot check";
+    if (alert.type === "FOOT_CHECK_NORMAL") return "View foot check results";
+    if (alert.type === "FOOT_SYMPTOM_ALERT") return "View foot check results";
     if (alert.relatedKey === "eye") return "View screening status";
+    if (alert.relatedKey === "heart") return "View screening status"
     if (alert.relatedKey === "kidney") return "View screening status";
     return "View details";
   }
@@ -384,10 +387,11 @@ async function fetchOverview() {
 
     overview.greeting = data.greeting || null;
     overview.organs = data.organs || [];
-    overview.riskAlerts = [...(data.riskAlerts || [])].sort((a, b) => {
-      const order = { foot: 0, eye: 1, kidney: 2, heart: 3 };
-      return (order[a.relatedKey] ?? 99) - (order[b.relatedKey] ?? 99);
-    });
+    const rawAlerts = data.riskAlerts || [];
+    const footAlerts = rawAlerts.filter(alert => alert.relatedKey === "foot");
+    const otherAlerts = rawAlerts.filter(alert => alert.relatedKey !== "foot");
+
+    overview.riskAlerts = [...footAlerts, ...otherAlerts];
     overview.todayMedications = data.todayMedications || [];
     overview.screenings = data.screenings || [];
   } catch (e) {
@@ -440,6 +444,14 @@ function logout() {
 function handleAlertAction(alert) {
   if (alert.relatedKey === "foot") {
     router.push("/foot");
+    return;
+  }
+  if (
+      alert.relatedKey === "eye" ||
+      alert.relatedKey === "kidney" ||
+      alert.relatedKey === "heart"
+  ) {
+    router.push(`/organs/${alert.relatedKey}`);
     return;
   }
 }

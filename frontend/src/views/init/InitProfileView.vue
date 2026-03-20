@@ -44,7 +44,6 @@
           <option value="">Select</option>
           <option>T1D</option>
           <option>T2D</option>
-          <option>GDM</option>
         </select>
 
         <label class="auth-label">Diagnosis Timeframe</label>
@@ -52,7 +51,9 @@
           <option value="">Select</option>
           <option>&lt; 1 year</option>
           <option>1-3 years</option>
-          <option>3+ years</option>
+          <option>4-7 years</option>
+          <option>8-10 years</option>
+          <option>> 10 years</option>
         </select>
 
         <div v-if="error" class="auth-alert auth-alert-error">

@@ -29,6 +29,14 @@
           <div class="tip-note">{{ footData.education.tip }}</div>
         </section>
 
+        <!-- ✅ 新增：foot symptom image -->
+        <section class="foot-image-card">
+          <img
+              src="/FOOT_SYMPTOMS.jpg"
+              alt="Foot symptom warning signs"
+              class="foot-image"
+          />
+        </section>
         <!-- completed notice -->
         <section v-if="footData.todayCompleted" class="foot-card notice-card">
           You have already completed today's foot check. You can still update
@@ -467,6 +475,20 @@ onMounted(() => {
   border-color: #cbd5e1;
   transform: translateY(-1px);
   box-shadow: 0 10px 22px rgba(15, 23, 42, 0.06);
+}
+
+.foot-image-card {
+  margin-top: 16px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+}
+
+.foot-image {
+  width: 100%;
+  display: block;
 }
 
 @media (max-width: 640px) {
