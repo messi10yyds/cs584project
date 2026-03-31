@@ -50,7 +50,24 @@ Follow these steps to run the project locally:
 ```bash
 git clone <your-repo-url>
 cd cs584project
-
+```
+### 2. Setup the database
+Create a MySQL database named diabetes_mvp
+Import the provided SQL file
+Update your database credentials in the .env file
+### 3. Run the backend
+```bash
+cd backend
+mvn spring-boot:run
+```
+### 4. Run the frontend
+```bash
+cd frontend
+npm install
+npm run dev
+```
+### 5. Open the application
+Visit:http://localhost:5173
 ## Project Status
 
 - [ ] Requirements gathering
