@@ -50,6 +50,7 @@ git clone https://github.com/messi10yyds/cs584project.git
 cd cs584project
 ```
 ### 2. Setup the database
+The database schema is provided in `database/schema.sql`.<br>
 Create a MySQL database named diabetes_mvp<br>
 Import the provided SQL file<br>
 Update your database credentials in the .env file
