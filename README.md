@@ -1,4 +1,4 @@
-# CS584 Project - [Diacare Egypt]
+# CS584 Project - Diacare Egypt
 
 **Course:** CS584 Software Engineering in Practice  
 **Semester:** Spring 2026  
@@ -35,10 +35,8 @@ The system is designed as a minimum viable product (MVP), focusing on core featu
 
 ## Tech Stack
 
-## Tech Stack
-
-- **Frontend:** Vue 3, Vite  
-- **Backend:** Spring Boot, Spring Security, JWT, MyBatis  
+- **Frontend:** Vue 3
+- **Backend:** Spring Boot 
 - **Database:** MySQL  
 - **Deployment:** Google Cloud Run  
 
@@ -48,7 +46,7 @@ Follow these steps to run the project locally:
 
 ### 1. Clone the repository
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/messi10yyds/cs584project.git
 cd cs584project
 ```
 ### 2. Setup the database
@@ -67,27 +65,35 @@ npm install
 npm run dev
 ```
 ### 5. Open the application
-Visit:http://localhost:5173
+Visit: http://localhost:5173
+
+## Environment Variables
+
+The project requires the following environment variables (see `.env.example`):
+
+- DB_URL  
+- DB_USERNAME  
+- DB_PASSWORD  
+- JWT_SECRET  
+- JWT_EXPIRE_MS  
 ## Project Status
 
 - [X] Requirements gathering
 - [X] SOW completed
 - [X] Prototype/mockup
 - [X] MVP development
-- [ ] User testing
-- [ ] Final delivery
+- [X] User testing
+- [X] Final delivery
 
 ## Links
 
 - **Live Demo:** https://diacare-egypt-110803059296.us-east1.run.app
-- **Documentation:** [Link to docs folder]
-- **Project Board:** [Link to GitHub Project]
 
 ## Collaborators
 
-- **Developer:** [Yifan Liu] (@yourusername)
+- **Developer:** Yifan Liu (@messi10yyds)
 - **Instructor:** Chase Fensore (@fensorechase)
 
 ---
 
-*Last updated: [Date]*
+*Last updated: 03/31/2026*
