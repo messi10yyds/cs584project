@@ -52,9 +52,9 @@ git clone <your-repo-url>
 cd cs584project
 ```
 ### 2. Setup the database
-Create a MySQL database named diabetes_mvp
-Import the provided SQL file
-Update your database credentials in the .env file
+-Create a MySQL database named diabetes_mvp
+-Import the provided SQL file
+-Update your database credentials in the .env file
 ### 3. Run the backend
 ```bash
 cd backend
