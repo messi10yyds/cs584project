@@ -1,4 +1,4 @@
-# CS584 Project - [Your Name]
+# CS584 Project - [Diacare Egypt]
 
 **Course:** CS584 Software Engineering in Practice  
 **Semester:** Spring 2026  
@@ -70,22 +70,22 @@ npm run dev
 Visit:http://localhost:5173
 ## Project Status
 
-- [ ] Requirements gathering
-- [ ] SOW completed
-- [ ] Prototype/mockup
-- [ ] MVP development
+- [X] Requirements gathering
+- [X] SOW completed
+- [X] Prototype/mockup
+- [X] MVP development
 - [ ] User testing
 - [ ] Final delivery
 
 ## Links
 
-- **Live Demo:** [URL once deployed]
+- **Live Demo:** [[URL once deployed]](https://diacare-egypt-110803059296.us-east1.run.app)
 - **Documentation:** [Link to docs folder]
 - **Project Board:** [Link to GitHub Project]
 
 ## Collaborators
 
-- **Developer:** [Your name] (@yourusername)
+- **Developer:** [Yifan Liu] (@yourusername)
 - **Instructor:** Chase Fensore (@fensorechase)
 
 ---
