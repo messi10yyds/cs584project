@@ -79,7 +79,7 @@ Visit:http://localhost:5173
 
 ## Links
 
-- **Live Demo:** [[URL once deployed]](https://diacare-egypt-110803059296.us-east1.run.app)
+- **Live Demo:** https://diacare-egypt-110803059296.us-east1.run.app
 - **Documentation:** [Link to docs folder]
 - **Project Board:** [Link to GitHub Project]
 
