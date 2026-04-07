@@ -113,6 +113,11 @@ The project requires the following environment variables (see `.env.example`):
 - [X] User testing
 - [X] Final delivery
 
+## Architecture Diagram
+
+<img width="874" height="692" alt="image" src="https://github.com/user-attachments/assets/708e1641-ff66-411d-bad2-fdd56fd4c02f" />
+
+
 ## Known Limitations
 
 - The appointment system is partially implemented and does not include a full provider-side workflow.
