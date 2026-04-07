@@ -3,6 +3,11 @@
 **Course:** CS584 Software Engineering in Practice  
 **Semester:** Spring 2026  
 **Instructor:** Chase Fensore
+## Summary
+
+DiaCare Egypt is a web application that helps diabetes patients monitor their health and stay on track with recommended screenings. 
+
+It provides a simple dashboard for tracking screenings, medications, and daily symptoms, while offering basic risk alerts and educational support.
 
 ## Project Description
 
@@ -40,6 +45,16 @@ The system is designed as a minimum viable product (MVP), focusing on core featu
 - **Database:** MySQL  
 - **Deployment:** Google Cloud Run  
 
+## Prerequisites
+
+Before running this project, make sure you have:
+
+- Node.js (v16+ recommended)
+- npm
+- Java 17+
+- Maven
+- MySQL (local or cloud instance)
+
 ## Setup Instructions
 
 Follow these steps to run the project locally:
@@ -49,24 +64,36 @@ Follow these steps to run the project locally:
 git clone https://github.com/messi10yyds/cs584project.git
 cd cs584project
 ```
-### 2. Setup the database
+
+### 2. Configure environment variables
+
+Create a `.env` file in the root directory based on `.env.example`, and update the values as needed.
+
+### 3. Setup the database
 The database schema is provided in `database/schema.sql`.<br>
 Create a MySQL database named diabetes_mvp<br>
 Import the provided SQL file<br>
 Update your database credentials in the .env file
-### 3. Run the backend
+### 4. Run the backend
 ```bash
 cd backend
 mvn spring-boot:run
 ```
-### 4. Run the frontend
+### 5. Run the frontend
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
-### 5. Open the application
+### 6. Open the application
 Visit: http://localhost:5173
+
+## Test Accounts
+
+You can use the following test account to explore the system:
+
+- **Username:** yifan  
+- **Password:** 123456  
 
 ## Environment Variables
 
@@ -85,6 +112,12 @@ The project requires the following environment variables (see `.env.example`):
 - [X] MVP development
 - [X] User testing
 - [X] Final delivery
+
+## Known Limitations
+
+- The appointment system is partially implemented and does not include a full provider-side workflow.
+- The risk alert logic is relatively simple and may not cover all edge cases.
+- Deployment and setup require some manual configuration steps, such as database initialization and environment variable setup.
 
 ## Links
 
